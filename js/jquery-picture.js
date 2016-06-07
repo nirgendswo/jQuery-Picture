@@ -2,19 +2,19 @@
  * jQuery Picture
  * http://jquerypicture.com
  * http://github.com/Abban/jQuery-Picture
- * 
+ *
  * May 2012
- * 
+ *
  * @version 0.9
  * @author Abban Dunne http://abandon.ie
  * @license MIT
- * 
+ *
  * jQuery Picture is a plugin to add support for responsive images to your layouts.
  * It supports both figure elements with some custom data attributes and the new
  * proposed picture format. This plugin will be made redundant when the format is
  * approved and implemented by browsers. Lets hope that happens soon. In the meantime
  * this plugin will be kept up to date with latest developments.
- * 
+ *
  */
 (function($){
 
@@ -29,7 +29,7 @@
 			inlineDimensions: false
 
         };
-		
+
 		var settings = $.extend({}, defaults, args);
 
 		this.each(function(){
@@ -47,34 +47,32 @@
 
 			//Delete the noscript we don't need it now anyway
 			element.find('noscript').remove();
-			
+
 			// Initialise the images
 			getCurrentMedia(true);
 
 			// Only call the image resize function 200ms after window stops being resized
 			timeoutOffset = false;
-			
-			$(window).resize(function(){
-				
-				if(timeoutOffset !== false)
-					clearTimeout(timeoutOffset);
-				
-				timeoutOffset = setTimeout(getCurrentMedia, 200);
-			
-			});
 
+			$(window).bind('resize.picture', function() {
+				if (timeoutOffset !== false) {
+					clearTimeout(timeoutOffset);
+				}
+
+				timeoutOffset = setTimeout(getCurrentMedia, 200);
+			});
 
 			/**
 			 * getCurrentMedia
-			 * 
+			 *
 			 * Checks the window width off the media query types and selects the current one.
 			 * Calls the setPicture or setFigure function to set the image.
-			 * 
+			 *
 			 */
 			function getCurrentMedia(init){
 
 				if(init){
-					
+
 					if(element.get(0).tagName.toLowerCase() == 'figure'){
 
 						var mediaObj = element.data();
@@ -108,26 +106,26 @@
 						});
 
 					}
-					breakpoints.sort(function(a,b){return a - b}); //make sure the largest breakpoint is the last 
+					breakpoints.sort(function(a,b){return a - b}); //make sure the largest breakpoint is the last
 
 				}
 
 				var c = 0;
-				
+
 				// Check if user defined container, otherwise take window
 				if (settings.container == null){
-				
+
 					windowWidth = ($(window).width()) * PixelRatio;
-				
+
 				}else{
-				
+
 					windowWidth = ($(settings.container).width()) * PixelRatio;
-				
+
 				}
 
 				// Set the c variable to the current media width
 				$.each(breakpoints, function(i,v){
-					
+
 					if(parseInt(windowWidth) >= parseInt(v) && parseInt(c) <= parseInt(v))
 						c = v;
 
@@ -153,10 +151,10 @@
 
 			/**
 			 * setPicture
-			 * 
+			 *
 			 * Pulls the image src and media attributes from the source tags and sets
 			 * the src of the enclosed img tag to the appropriate one.
-			 * 
+			 *
 			 */
 			function setPicture(){
 
@@ -195,7 +193,7 @@
 					}
 
 				}else{
-					
+
 					element.find('img').attr('src', sizes[currentMedia]);
 
 				}
@@ -214,10 +212,10 @@
 
 			/**
 			 * setFigure
-			 * 
+			 *
 			 * Pulls the image src and and media values from the data attributes
 			 * and sets the src of the enclosed img tag to the appropriate one.
-			 * 
+			 *
 			 */
 			function setFigure(){
 
